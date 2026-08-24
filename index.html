@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智析 · 双视角分析 | 中国建筑 (601668)</title>
+<style>
+  :root {
+    --navy: #0a1628; --navy-mid: #13203d; --navy-light: #1a2d52; --ink: #1a1a1a;
+    --gold: #b8944c; --gold-light: #d4af37; --bg: #fafaf9; --card: #ffffff;
+    --text: #1a1a1a; --text-sec: #4a5568; --muted: #718096; --border: rgb(0 0 0 / .07);
+    --green: #2e7d32; --green-bg: #e8f5e9; --red: #c62828; --red-bg: #ffebee;
+    --amber: #e65100; --amber-bg: #fff3e0; --blue: #1565c0; --blue-bg: #e3f2fd;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0a1628; --card:#13203d; --text:#e2e8f0; --text-sec:#a0aec0; --muted:#718096;
+      --border:rgb(255 255 255/.07); --green-bg:rgb(46 125 50/.2); --red-bg:rgb(198 40 40/.2);
+      --amber-bg:rgb(230 81 0/.2); --blue-bg:rgb(21 101 192/.2); }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Inter",-apple-system,"Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.7; -webkit-font-smoothing:antialiased; }
+  .container { max-width:1100px; margin:0 auto; padding:0 24px; }
+  .cover { background:linear-gradient(135deg,var(--navy) 0%,#0d1f3c 50%,#142646 100%);
+    color:#fff; padding:72px 0 56px; position:relative; overflow:hidden; }
+  .cover::before { content:""; position:absolute; top:-120px; right:-120px; width:520px; height:520px;
+    background:radial-gradient(circle,rgb(212 175 55/.12),transparent 70%); pointer-events:none; }
+  .badge { display:inline-block; font-size:.72rem; font-weight:600; letter-spacing:.14em; padding:6px 14px;
+    border-radius:4px; border:1px solid rgb(212 175 55/.4); color:var(--gold-light); margin-bottom:18px; text-transform:uppercase; }
+  .cover h1 { font-size:clamp(1.7rem,4vw,2.5rem); font-weight:700; letter-spacing:-.02em; line-height:1.2; margin-bottom:12px; }
+  .cover .sub { font-size:1.02rem; color:rgb(255 255 255/.62); max-width:640px; line-height:1.7; }
+  .cover .meta { display:flex; flex-wrap:wrap; gap:22px; margin-top:26px; font-size:.78rem; color:rgb(255 255 255/.45); }
+  .cover .meta span { display:flex; align-items:center; gap:6px; }
+  .stat-bar { background:var(--navy-mid); padding:28px 0; }
+  .stat-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; text-align:center; }
+  .stat-num { font-size:1.8rem; font-weight:700; color:var(--gold-light); letter-spacing:-.02em; line-height:1; }
+  .stat-lbl { font-size:.72rem; color:rgb(255 255 255/.45); margin-top:6px; letter-spacing:.06em; }
+  .stat-note { font-size:.7rem; color:rgb(255 255 255/.35); margin-top:2px; }
+  .section { padding:56px 0; }
+  .section-header { margin-bottom:32px; }
+  .section-header .tag { display:inline-block; font-size:.72rem; font-weight:600; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:8px; }
+  .section-header h2 { font-size:1.5rem; font-weight:600; letter-spacing:-.01em; }
+  .section-header .line { width:48px; height:3px; background:var(--gold); margin-top:12px; border-radius:1px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:20px; }
+  .card h3 { font-size:1.05rem; font-weight:600; margin-bottom:6px; }
+  .card .q { color:var(--muted); font-size:.85rem; margin-bottom:14px; }
+  .verdict { font-size:1.06rem; font-weight:600; line-height:1.7; color:var(--text); }
+  .verdict.gold { border-left:3px solid var(--gold); padding-left:14px; }
+  .kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-top:18px; }
+  .kpi { background:var(--bg); border-radius:8px; padding:14px; text-align:center; }
+  .kpi .v { font-size:1.2rem; font-weight:700; color:var(--navy); }
+  @media (prefers-color-scheme:dark) { .kpi .v { color:var(--gold-light); } }
+  .kpi .l { font-size:.72rem; color:var(--muted); margin-top:2px; }
+  table { width:100%; border-collapse:collapse; margin-top:14px; font-size:.88rem; }
+  th,td { padding:10px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  th { color:var(--muted); font-weight:600; font-size:.78rem; letter-spacing:.03em; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:20px; font-size:.75rem; font-weight:600; }
+  .pill.green { background:var(--green-bg); color:var(--green); }
+  .pill.amber { background:var(--amber-bg); color:var(--amber); }
+  .pill.red { background:var(--red-bg); color:var(--red); }
+  .pill.blue { background:var(--blue-bg); color:var(--blue); }
+  .cross { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:760px){ .cross{grid-template-columns:1fr;} .stat-row{grid-template-columns:repeat(2,1fr);} }
+  .cross .side { border-radius:10px; padding:20px; }
+  .cross .side.strat { background:var(--blue-bg); }
+  .cross .side.tax { background:var(--green-bg); }
+  .disclaimer { background:var(--card); border:1px solid var(--border); border-left:3px solid var(--amber);
+    border-radius:10px; padding:22px; font-size:.85rem; color:var(--text-sec); line-height:1.8; }
+  .disclaimer b { color:var(--text); }
+  footer { padding:40px 0 64px; text-align:center; color:var(--muted); font-size:.8rem; line-height:1.9; }
+  footer .brand { color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+
+<header class="cover">
+  <div class="container">
+    <span class="badge">智析 · AI 工作台 · DeepSeek Harness</span>
+    <h1>中国建筑（601668）双视角分析报告</h1>
+    <div class="sub">一台工作台，两个专业镜片：用刘润的「战略视角」看这家全球最大建筑商的转型，用石彦文的「税眼看账」看它的薄利、高杠杆与现金流命门——双 Agent 交叉验证，输出一份可复核的公开数据诊断。</div>
+    <div class="meta">
+      <span>📅 数据基准：2025 年报 + 2026 一季报</span>
+      <span>🎯 分析对象：中国建筑 601668（沪市）</span>
+      <span>🧠 双 Agent：刘润战略 × 石彦文财税</span>
+      <span>📊 数据来源：akshare / 东方财富公开数据</span>
+    </div>
+  </div>
+</header>
+
+<div class="stat-bar">
+  <div class="container stat-row">
+    <div><div class="stat-num">2.08<span style="font-size:1rem">万亿</span></div><div class="stat-lbl">2025 营收</div><div class="stat-note">同比 -4.81%</div></div>
+    <div><div class="stat-num">390.7<span style="font-size:1rem">亿</span></div><div class="stat-lbl">2025 净利润</div><div class="stat-note">同比 -15.42%</div></div>
+    <div><div class="stat-num">2.57%</div><div class="stat-lbl">销售净利率</div><div class="stat-note">毛利率 9.90%</div></div>
+    <div><div class="stat-num">23.7%</div><div class="stat-lbl">有效税率</div><div class="stat-note">接近法定 25%</div></div>
+    <div><div class="stat-num">76.9%</div><div class="stat-lbl">资产负债率</div><div class="stat-note">每股经营现金流 0.50 元</div></div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Lens 1 · 刘润战略视角</span>
+      <h2>增长之问：全球最大建筑商，为何「规模越大、利润越薄」？</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <h3>① 底层逻辑 — 底牌是什么？</h3>
+      <div class="q">真正的本质，不是「盖楼」，而是央企信用背书下的「超级拿单 + 全产业链履约」能力。</div>
+      <p class="verdict gold">中国建筑的底牌是<strong>央企信用 + 全产业链施工能力</strong>：它降低的是政府/业主的<strong>信任成本</strong>（央企履约兜底）和<strong>多环节交易成本</strong>（设计→施工→投资一体化）。但这张底牌的代价是——它本质是一门「薄利、高杠杆、长周期、看政策脸色」的生意，赚的是规模的钱，不是效率的钱。</p>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="v">59.3%</div><div class="l">房建占比（毛利率仅 8.45%）</div></div>
+        <div class="kpi"><div class="v">9.90%</div><div class="l">整体毛利率（薄）</div></div>
+        <div class="kpi"><div class="v">76.9%</div><div class="l">资产负债率（高杠杆）</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>② 进化视角 — 第一曲线到哪了，第二曲线接上没？</h3>
+      <div class="q">看收入占比与毛利变化，判断「从施工承包商到投资运营商的转身」进度。</div>
+      <p class="verdict">第一曲线（房建 + 基建施工）已<strong>见顶</strong>：营收连续两年下滑（-3.46% → -4.81%），净利润连续两年双位数下滑（-14.87% → -15.42%）。第二曲线（<strong>能源工程、新基建、海外、运营业务</strong>）在起——研报一致提到「能源工程合同增速快、现金流持续向好」，但占比仍小，转型尚在「量的爬坡」阶段，还没到「质的兑现」。</p>
+      <table>
+        <tr><th>主营构成（2025 年报）</th><th class="num">收入（亿）</th><th class="num">占比</th><th class="num">毛利率</th></tr>
+        <tr><td>房屋建筑工程</td><td class="num">12,342</td><td class="num">59.28%</td><td class="num">8.45%</td></tr>
+        <tr><td>基础设施建设与投资</td><td class="num">5,432</td><td class="num">26.09%</td><td class="num">9.90%</td></tr>
+        <tr><td>房地产开发与投资</td><td class="num">2,844</td><td class="num">13.66%</td><td class="num">14.43%</td></tr>
+        <tr><td>勘察设计</td><td class="num">102</td><td class="num">0.49%</td><td class="num">18.02%</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>③ 概率思维 — 押的是「大概率正确」还是「暴利」？</h3>
+      <div class="q">胜算 = 方向正确 × 兑现速度。</div>
+      <p class="verdict">中国建筑押的是「<strong>能源转型 + 新基建</strong>」——这是政策确定性最高、大概率正确的方向（能源工程合同增速快正是印证）。但问题不在方向，在<strong>兑现速度与质量</strong>：传统房建仍在拖后腿（房地产下行），海外业务毛利率仅 2.81%（几乎不赚钱）。结论：<strong>方向对、但转型的「利润兑现」还没跟上「合同兑现」</strong>。</p>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="v">-4.81%</div><div class="l">2025 营收增速（连续两年负）</div></div>
+        <div class="kpi"><div class="v">-15.42%</div><div class="l">2025 净利增速（减值拖累）</div></div>
+        <div class="kpi"><div class="v">2.81%</div><div class="l">境外毛利率（几乎不赚钱）</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>④ 势能 — 是进攻武器，还是防守包袱？</h3>
+      <div class="q">「中国建筑」这块央企招牌，是拿单利器，还是被地产周期绑架的包袱？</div>
+      <p class="verdict">「中国建筑」是极强的<strong>拿单势能</strong>（央企信用、全球最大规模、全产业链），在政府和大型业主面前几乎不可替代。但它同时被<strong>房地产下行周期绑架</strong>——房建占 59%、房地产占 13.66%，这两块正是利润下滑和减值计提的重灾区。势能是它的护城河，也是它「船大难掉头」的原因。</p>
+      <p class="verdict gold">核心判断：中国建筑是「大象」——规模全球第一，但主业正处下行周期，净利连续两年双位数下滑，核心矛盾是「<strong>规模见顶 + 减值计提侵蚀利润 + 现金流脆弱</strong>」；转机在于「能源工程 + 现金流改善 + 高分红」，它正从「赚规模的钱」转向「赚质量和现金流的钱」——但这个转身，还没完成。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Lens 2 · 石彦文财税视角</span>
+      <h2>底盘之问：税眼看账，2.57% 的净利率经得起什么？</h2>
+      <div class="line"></div>
+    </div>
+
+    <div class="card">
+      <h3>① 业务实质优先 — 先搞清「是什么」，再谈「怎么缴」</h3>
+      <p class="verdict">中国建筑是<strong>建筑业</strong>（施工），不是制造业：主税种增值税（建筑业 9%）、企业所得税 25%（央企），且实行<strong>跨地区经营「项目部预缴 + 机构所在地汇总清算」</strong>的征管模式。判断分业务看主营构成——59% 房建、26% 基建、13.66% 房地产（房地产适用不同税制与预缴率）。「业务实质」决定了它的税务难点不在税率，在<strong>跨地区预缴平衡 + 研发归集 + 减值纳税调整</strong>。</p>
+    </div>
+
+    <div class="card">
+      <h3>② 合规前置 — 涉税风险点扫描</h3>
+      <table>
+        <tr><th>风险点</th><th class="num">当前值</th><th>判断</th><th>说明</th></tr>
+        <tr><td>有效税率</td><td class="num">23.7%</td><td><span class="pill amber">关注</span></td><td>接近法定 25%，研发 440 亿的加计扣除「应享未享」空间大</td></tr>
+        <tr><td>研发费用加计扣除</td><td class="num">440.09 亿</td><td><span class="pill amber">关注</span></td><td>金额巨大，立项/归集/辅助账若不规范是稽查高频点，也是最大节税空间</td></tr>
+        <tr><td>跨地区预缴</td><td class="num">—</td><td><span class="pill blue">提示</span></td><td>项目部增值税/所得税预缴与汇总清算的税负平衡，是建企税务管理难点</td></tr>
+        <tr><td>减值损失纳税调整</td><td class="num">拖累利润</td><td><span class="pill red">重点</span></td><td>研报「减值计提拖累利润」，税法上资产损失税前扣除有严格条件，需纳税调整申报</td></tr>
+        <tr><td>利息资本化</td><td class="num">176.42 亿</td><td><span class="pill blue">提示</span></td><td>财务费用为正（有息负债高），利息资本化 vs 费用化的税务处理需规范</td></tr>
+      </table>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="v">702.22 亿</div><div class="l">利润总额</div></div>
+        <div class="kpi"><div class="v">166.64 亿</div><div class="l">所得税费用</div></div>
+        <div class="kpi"><div class="v">23.7%</div><div class="l">有效税率（=166.64/702.22）</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>③ 风险兜底 — 给底盘定级</h3>
+      <p class="verdict">销售净利率 <strong>2.57%</strong>（极薄，容错率极低）、资产负债率 <strong>76.90%</strong>（高杠杆）、每股经营现金流 <strong>0.50 元</strong>（弱，2026Q1 为 -1.86 元）。综合定级：<strong>财税风险「中高」</strong>——税务上无「致命伤」，但<strong>经营脆弱性极高</strong>：2.57% 的净利率意味着任何成本、减值、税务波动都会被成倍放大到利润，现金流和应收去化才是真正的命门。</p>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="v">2.57%</div><div class="l">销售净利率（极薄）</div></div>
+        <div class="kpi"><div class="v">76.90%</div><div class="l">资产负债率（高杠杆）</div></div>
+        <div class="kpi"><div class="v">0.50 元</div><div class="l">每股经营现金流（弱）</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>④ 实操落地 — 落到动作</h3>
+      <table>
+        <tr><th>动作</th><th>落地内容</th></tr>
+        <tr><td>① 研发加计扣除应享尽享</td><td>440 亿研发费用逐项目归集，规范立项/辅助账，制造业/建安加计扣除比例应享尽享</td></tr>
+        <tr><td>② 跨地区税负平衡</td><td>项目部预缴与汇总清算统筹，避免「预缴过多、退税困难」占用资金</td></tr>
+        <tr><td>③ 减值损失纳税调整</td><td>应收/合同资产减值损失按税法条件做税前扣除申报，避免「会计已提、税务不认」</td></tr>
+        <tr><td>④ 应收去化 + 现金流</td><td>工程款回收、合同资产盘活，压降有息负债（财务费用 176 亿），把「纸面利润」变「现金利润」</td></tr>
+      </table>
+      <p class="verdict gold">核心判断：中国建筑的财税底色是「薄利 + 高杠杆 + 弱现金流」，税务上<strong>没有致命伤，但也没吃满优惠</strong>——23.7% 的有效税率接近法定 25%，研发 440 亿的加计扣除是最大可挖空间；真正的风险不在税务，而在「<strong>2.57% 的净利率经不起任何风吹草动</strong>」，现金流和减值才是命门。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="tag">Cross-check · 双视角交叉验证</span>
+      <h2>战略结论 × 财税结论，对齐在哪、分歧在哪？</h2>
+      <div class="line"></div>
+    </div>
+    <div class="cross">
+      <div class="side strat">
+        <b>战略视角说</b>
+        <p style="font-size:.9rem; margin-top:8px;">要转「能源工程 + 新基建」、改善现金流、靠高分红回馈股东；但房建 + 房地产仍是 73% 的包袱，船大难掉头。</p>
+      </div>
+      <div class="side tax">
+        <b>财税视角说</b>
+        <p style="font-size:.9rem; margin-top:8px;">研发 440 亿加计扣除「没吃满」、减值纳税调整有空间、现金流和应收去化才是命门。</p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3>交叉结论</h3>
+      <p class="verdict">两者<strong>对齐</strong>：转型（能源工程/新基建）正好需要研发投入，而研发加计扣除能<strong>降低转型的净成本</strong>——「投得越多、税负越轻」，这是战略与财税的天然合力。<br>
+      两者<strong>分歧</strong>：战略把「减值计提」当利润下滑的短期扰动，财税提醒它是<strong>长期税务陷阱</strong>——会计上提了减值，税法上未必认，做不好纳税调整就是「利润已经没了、税还得多交」。<br>
+      两者<strong>共识</strong>：中国建筑当前最该做的不是「做大」，而是「<strong>现金为王 + 应收去化 + 研发加计扣除吃满</strong>」——把「规模利润」真正转成「现金利润」。</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+    <div class="disclaimer">
+      <b>诚实边界</b><br>
+      ① 数据为公开财报（合并口径，来源 akshare / 东方财富，采集于 2026-08），非内部数据，判断可能与实际有偏差；② 分业务 / 分地区数据粒度有限（如看不到单项目、单品类明细），分析到「颗粒度」为止；③ 本报告仅供「智析」能力演示与方法论展示，不构成投资建议或税务意见，落地决策需持牌专业人士；④ 框架是「分析视角」不是「预测」，不能保证结论正确。
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <span class="brand">Generated by 智析 · DeepSeek Harness</span><br>
+    双 Agent 编排：liurun-perspective（战略镜片）× shiyanwen-perspective（财税镜片）<br>
+    数据引擎：financial-data-access（akshare 21K★）· 质量门禁：zhixi-flywheel / zhixi_gate（勾稽通过）<br>
+    —— 一句自然语言触发，端到端拉数 → 勾稽 → 双视角 → 交叉验证 ——
+  </div>
+</footer>
+
+</body>
+</html>
